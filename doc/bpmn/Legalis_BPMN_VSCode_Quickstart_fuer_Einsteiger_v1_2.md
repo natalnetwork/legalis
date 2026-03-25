@@ -1,6 +1,6 @@
-# Legalis BPMN VS Code Quickstart für Einsteiger v1.1
+# Legalis BPMN VS Code Quickstart für Einsteiger v1.2
 
-Status: Arbeitsversion / V1.1  
+Status: Arbeitsversion / V1.2  
 Zielgruppe: BPMN-Einsteiger im Legalis-Kontext  
 Zweck: Schnellstart für die ersten offiziellen Legalis-Standardprozesse in VS Code
 
@@ -10,7 +10,7 @@ Zweck: Schnellstart für die ersten offiziellen Legalis-Standardprozesse in VS C
 
 Dieses Dokument zeigt den schnellsten sauberen Weg, um in VS Code ein Legalis-konformes BPMN-Modell anzulegen.
 
-Wichtig: Für offizielle Legalis-Standardprozesse gilt das **Legalis-v1.2-Profil**.
+Wichtig: Für offizielle Legalis-Standardprozesse gilt das **Legalis-v1.3-Profil**.
 
 ---
 
@@ -40,7 +40,7 @@ Empfehlung für Standardprozesse:
 Lege Elemente in dieser Reihenfolge an:
 
 1. Start Event
-2. benötigte Lanes
+2. benötigte Lanes nur falls fachlich nötig
 3. erster Task
 4. erstes Intermediate Catch Event
 5. nächster Task
@@ -48,10 +48,12 @@ Lege Elemente in dieser Reihenfolge an:
 7. weitere Events und Tasks
 8. End Event(s)
 9. Sequence Flows verbinden
+10. pro testbarer Task ein Data Object **`Form`** anlegen
+11. `Form` per Association mit dem Task verbinden
 
 ---
 
-## 5. Welche Elemente Du in v1.2 verwenden darfst
+## 5. Welche Elemente Du verwenden darfst
 
 Erlaubt:
 
@@ -63,6 +65,8 @@ Erlaubt:
 - Exclusive Gateway nur kontrolliert
 - Lane
 - Sequence Flow
+- Data Object **nur für `Form`**
+- Association **nur für `Form` ↔ Task`**
 
 Nicht erlaubt:
 
@@ -72,6 +76,7 @@ Nicht erlaubt:
 - Business Rule Task
 - Message Flow
 - Timer Event
+- sonstige Data Objects
 
 ---
 
@@ -102,24 +107,25 @@ Für jeden engine-relevanten **Task** und jedes engine-relevante **Intermediate 
 
 ---
 
-## 7. Lanes richtig verwenden
+## 7. Forms hinzufügen
 
-In Legalis v1.2 gilt:
+Für jede Task, die in Imixs-Forms getestet oder geöffnet werden soll:
 
-- **Lanes ja**
-- **Pools nein**
+1. Data Object anlegen
+2. Name auf **`Form`** setzen
+3. Data Object per Association mit genau einem Task verbinden
+4. XML-Formdefinition in die Dokumentation / Eigenschaften des Data Objects eintragen
 
-Verwende eine Lane für:
+Minimalstruktur:
 
-- Rolle,
-- Verantwortungszone,
-- organisatorische Funktion.
-
-Beispiele:
-
-- Kanzleiassistenz
-- Anwalt / Sachbearbeitung
-- Externe Buchhaltung
+```xml
+<?xml version="1.0"?>
+<imixs-form>
+  <imixs-form-section label="Mandatsaufnahme">
+    <item name="_subject" type="text" label="Betreff" />
+  </imixs-form-section>
+</imixs-form>
+```
 
 ---
 
@@ -130,6 +136,7 @@ Merksätze:
 - **Task = Zustand**
 - **Event = Übergang**
 - **Lane = Verantwortung**
+- **Form = UI-Definition des Tasks**
 - **Ein Prozess = ein Durchlauf**
 - **Mehrere Events an einem Task = Event Gateway prüfen**
 
@@ -143,5 +150,6 @@ Merksätze:
 - Tasks als Zustände benannt?
 - Events als Übergänge benannt?
 - IDs sauber vergeben?
+- hat jede testbare Task eine Form?
 
 Wenn alle Antworten positiv sind, kann das Modell gespeichert und committed werden.
