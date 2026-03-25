@@ -1,0 +1,179 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:ext="http://org.eclipse.bpmn2/ext" xmlns:imixs="http://www.imixs.org/bpmn2" xmlns:open-bpmn="http://open-bpmn.org/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" exporter="ChatGPT" exporterVersion="1.0" id="Definitions_1" targetNamespace="http://www.imixs.org/bpmn2">
+  <bpmn2:extensionElements>
+    <imixs:item name="txtworkflowmodelversion" type="xs:string">
+      <imixs:value><![CDATA[mandatsaufnahme-de-1.0.2]]></imixs:value>
+    </imixs:item>
+    <open-bpmn:auto-align>true</open-bpmn:auto-align>
+  </bpmn2:extensionElements>
+  <bpmn2:process id="mandatsaufnahme" isExecutable="false" name="Mandatsaufnahme" processType="Public">
+    <bpmn2:laneSet id="LaneSet_1">
+      <bpmn2:lane id="Lane_Assistenz" name="Kanzleiassistenz">
+        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_1000</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Event_1010</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Event_1110</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_1200</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Event_1210</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_1300</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Event_1310</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="Lane_Anwalt" name="Anwalt / Sachbearbeitung">
+        <bpmn2:flowNodeRef>Task_1100</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Gateway_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Event_1120</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_1900</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>EndEvent_Reject</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_1400</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>EndEvent_Active</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+    <bpmn2:startEvent id="StartEvent_1" name="Anfrage eingegangen">
+      <bpmn2:documentation id="doc_StartEvent_1">Start des fachlichen Durchlaufs für eine neue Mandatsanfrage.</bpmn2:documentation>
+      <bpmn2:outgoing>Flow_1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:task id="Task_1000" name="Lead offen" imixs:processid="1000">
+      <bpmn2:extensionElements/>
+      <bpmn2:incoming>Flow_1</bpmn2:incoming>
+      <bpmn2:documentation id="doc_Task_1000">Die Kanzleiassistenz erfasst eine neue Anfrage und prüft die Mindestangaben.</bpmn2:documentation>
+      <bpmn2:outgoing>Flow_2</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:intermediateCatchEvent id="Event_1010" name="Lead erfasst" imixs:activityid="10">
+      <bpmn2:extensionElements>
+        <imixs:item name="keypublicresult" type="xs:string"><imixs:value>1</imixs:value></imixs:item>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_2</bpmn2:incoming>
+      <bpmn2:documentation id="doc_Event_1010">Der Datensatz ist vollständig genug für die Konfliktprüfung.</bpmn2:documentation>
+      <bpmn2:outgoing>Flow_3</bpmn2:outgoing>
+    </bpmn2:intermediateCatchEvent>
+    <bpmn2:task id="Task_1100" name="Konfliktprüfung offen" imixs:processid="1100">
+      <bpmn2:extensionElements/>
+      <bpmn2:incoming>Flow_3</bpmn2:incoming>
+      <bpmn2:documentation id="doc_Task_1100">Anwalt oder zuständige Sachbearbeitung prüfen mögliche Interessenkonflikte.</bpmn2:documentation>
+      <bpmn2:outgoing>Flow_4</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:eventBasedGateway id="Gateway_1" name="Ergebnis Konfliktprüfung?" gatewayDirection="Diverging">
+      <bpmn2:incoming>Flow_4</bpmn2:incoming>
+      <bpmn2:documentation id="doc_Gateway_1">Alternative Workflow-Events der Konfliktprüfung.</bpmn2:documentation>
+      <bpmn2:outgoing>Flow_5</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_6</bpmn2:outgoing>
+    </bpmn2:eventBasedGateway>
+    <bpmn2:intermediateCatchEvent id="Event_1120" name="Konflikt festgestellt" imixs:activityid="20">
+      <bpmn2:extensionElements>
+        <imixs:item name="keypublicresult" type="xs:string"><imixs:value>1</imixs:value></imixs:item>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_5</bpmn2:incoming>
+      <bpmn2:documentation id="doc_Event_1120">Die Anfrage darf nicht als Mandat übernommen werden.</bpmn2:documentation>
+      <bpmn2:outgoing>Flow_7</bpmn2:outgoing>
+    </bpmn2:intermediateCatchEvent>
+    <bpmn2:task id="Task_1900" name="Mandat abgelehnt" imixs:processid="1900">
+      <bpmn2:extensionElements/>
+      <bpmn2:incoming>Flow_7</bpmn2:incoming>
+      <bpmn2:documentation id="doc_Task_1900">Der Vorgang wird mit dokumentierter Ablehnung abgeschlossen.</bpmn2:documentation>
+      <bpmn2:outgoing>Flow_8</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:endEvent id="EndEvent_Reject" name="Vorgang beendet – abgelehnt">
+      <bpmn2:incoming>Flow_8</bpmn2:incoming>
+      <bpmn2:documentation id="doc_EndEvent_Reject">Ende des Durchlaufs mit negativer Entscheidung.</bpmn2:documentation>
+    </bpmn2:endEvent>
+    <bpmn2:intermediateCatchEvent id="Event_1110" name="Kein Konflikt" imixs:activityid="10">
+      <bpmn2:extensionElements>
+        <imixs:item name="keypublicresult" type="xs:string"><imixs:value>1</imixs:value></imixs:item>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_6</bpmn2:incoming>
+      <bpmn2:documentation id="doc_Event_1110">Die Anfrage darf als Mandat angelegt werden.</bpmn2:documentation>
+      <bpmn2:outgoing>Flow_9</bpmn2:outgoing>
+    </bpmn2:intermediateCatchEvent>
+    <bpmn2:task id="Task_1200" name="Mandat anlegen" imixs:processid="1200">
+      <bpmn2:extensionElements/>
+      <bpmn2:incoming>Flow_9</bpmn2:incoming>
+      <bpmn2:documentation id="doc_Task_1200">Die Kanzleiassistenz legt Akte und Grunddaten an.</bpmn2:documentation>
+      <bpmn2:outgoing>Flow_10</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:intermediateCatchEvent id="Event_1210" name="Mandat angelegt" imixs:activityid="10">
+      <bpmn2:extensionElements>
+        <imixs:item name="keypublicresult" type="xs:string"><imixs:value>1</imixs:value></imixs:item>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_10</bpmn2:incoming>
+      <bpmn2:documentation id="doc_Event_1210">Die Akte ist angelegt und bereit für die erste Fristerfassung.</bpmn2:documentation>
+      <bpmn2:outgoing>Flow_11</bpmn2:outgoing>
+    </bpmn2:intermediateCatchEvent>
+    <bpmn2:task id="Task_1300" name="Erste Frist erfassen" imixs:processid="1300">
+      <bpmn2:extensionElements/>
+      <bpmn2:incoming>Flow_11</bpmn2:incoming>
+      <bpmn2:documentation id="doc_Task_1300">Die erste Frist oder Wiedervorlage wird eingetragen.</bpmn2:documentation>
+      <bpmn2:outgoing>Flow_12</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:intermediateCatchEvent id="Event_1310" name="Frist erfasst" imixs:activityid="10">
+      <bpmn2:extensionElements>
+        <imixs:item name="keypublicresult" type="xs:string"><imixs:value>1</imixs:value></imixs:item>
+      </bpmn2:extensionElements>
+      <bpmn2:incoming>Flow_12</bpmn2:incoming>
+      <bpmn2:documentation id="doc_Event_1310">Die Akte kann in den aktiven Bearbeitungsstatus übergehen.</bpmn2:documentation>
+      <bpmn2:outgoing>Flow_13</bpmn2:outgoing>
+    </bpmn2:intermediateCatchEvent>
+    <bpmn2:task id="Task_1400" name="Mandat aktiv" imixs:processid="1400">
+      <bpmn2:extensionElements/>
+      <bpmn2:incoming>Flow_13</bpmn2:incoming>
+      <bpmn2:documentation id="doc_Task_1400">Das Mandat ist eröffnet und in aktiver Bearbeitung.</bpmn2:documentation>
+      <bpmn2:outgoing>Flow_14</bpmn2:outgoing>
+    </bpmn2:task>
+    <bpmn2:endEvent id="EndEvent_Active" name="Vorgang beendet – aktiv">
+      <bpmn2:incoming>Flow_14</bpmn2:incoming>
+      <bpmn2:documentation id="doc_EndEvent_Active">Ende des Initialdurchlaufs mit aktivem Mandat.</bpmn2:documentation>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_1000"/>
+    <bpmn2:sequenceFlow id="Flow_2" sourceRef="Task_1000" targetRef="Event_1010"/>
+    <bpmn2:sequenceFlow id="Flow_3" sourceRef="Event_1010" targetRef="Task_1100"/>
+    <bpmn2:sequenceFlow id="Flow_4" sourceRef="Task_1100" targetRef="Gateway_1"/>
+    <bpmn2:sequenceFlow id="Flow_5" name="Ja" sourceRef="Gateway_1" targetRef="Event_1120"/>
+    <bpmn2:sequenceFlow id="Flow_6" name="Nein" sourceRef="Gateway_1" targetRef="Event_1110"/>
+    <bpmn2:sequenceFlow id="Flow_7" sourceRef="Event_1120" targetRef="Task_1900"/>
+    <bpmn2:sequenceFlow id="Flow_8" sourceRef="Task_1900" targetRef="EndEvent_Reject"/>
+    <bpmn2:sequenceFlow id="Flow_9" sourceRef="Event_1110" targetRef="Task_1200"/>
+    <bpmn2:sequenceFlow id="Flow_10" sourceRef="Task_1200" targetRef="Event_1210"/>
+    <bpmn2:sequenceFlow id="Flow_11" sourceRef="Event_1210" targetRef="Task_1300"/>
+    <bpmn2:sequenceFlow id="Flow_12" sourceRef="Task_1300" targetRef="Event_1310"/>
+    <bpmn2:sequenceFlow id="Flow_13" sourceRef="Event_1310" targetRef="Task_1400"/>
+    <bpmn2:sequenceFlow id="Flow_14" sourceRef="Task_1400" targetRef="EndEvent_Active"/>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="mandatsaufnahme">
+      <bpmndi:BPMNShape id="Lane_Anwalt_di" bpmnElement="Lane_Anwalt" isHorizontal="true">
+        <dc:Bounds x="70" y="60" width="1700" height="180"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Assistenz_di" bpmnElement="Lane_Assistenz" isHorizontal="true">
+        <dc:Bounds x="70" y="240" width="1700" height="200"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1"><dc:Bounds x="120" y="322" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_1000_di" bpmnElement="Task_1000"><dc:Bounds x="190" y="300" width="160" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1010_di" bpmnElement="Event_1010"><dc:Bounds x="390" y="322" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_1100_di" bpmnElement="Task_1100"><dc:Bounds x="480" y="110" width="180" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1_di" bpmnElement="Gateway_1"><dc:Bounds x="720" y="125" width="50" height="50"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1120_di" bpmnElement="Event_1120"><dc:Bounds x="820" y="90" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_1900_di" bpmnElement="Task_1900"><dc:Bounds x="900" y="68" width="170" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Reject_di" bpmnElement="EndEvent_Reject"><dc:Bounds x="1100" y="90" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1110_di" bpmnElement="Event_1110"><dc:Bounds x="820" y="322" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_1200_di" bpmnElement="Task_1200"><dc:Bounds x="900" y="300" width="170" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1210_di" bpmnElement="Event_1210"><dc:Bounds x="1110" y="322" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_1300_di" bpmnElement="Task_1300"><dc:Bounds x="1190" y="300" width="180" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1310_di" bpmnElement="Event_1310"><dc:Bounds x="1410" y="322" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_1400_di" bpmnElement="Task_1400"><dc:Bounds x="1490" y="110" width="160" height="80"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_Active_di" bpmnElement="EndEvent_Active"><dc:Bounds x="1690" y="132" width="36" height="36"/></bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1"><di:waypoint x="156" y="340"/><di:waypoint x="190" y="340"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2"><di:waypoint x="350" y="340"/><di:waypoint x="390" y="340"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3"><di:waypoint x="426" y="340"/><di:waypoint x="450" y="340"/><di:waypoint x="450" y="150"/><di:waypoint x="480" y="150"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4"><di:waypoint x="660" y="150"/><di:waypoint x="720" y="150"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5"><di:waypoint x="770" y="150"/><di:waypoint x="795" y="150"/><di:waypoint x="795" y="108"/><di:waypoint x="820" y="108"/><bpmndi:BPMNLabel><dc:Bounds x="780" y="118" width="18" height="14"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6"><di:waypoint x="770" y="150"/><di:waypoint x="795" y="150"/><di:waypoint x="795" y="340"/><di:waypoint x="820" y="340"/><bpmndi:BPMNLabel><dc:Bounds x="778" y="244" width="28" height="14"/></bpmndi:BPMNLabel></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7"><di:waypoint x="856" y="108"/><di:waypoint x="900" y="108"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8"><di:waypoint x="1070" y="108"/><di:waypoint x="1100" y="108"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9"><di:waypoint x="856" y="340"/><di:waypoint x="900" y="340"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10_di" bpmnElement="Flow_10"><di:waypoint x="1070" y="340"/><di:waypoint x="1110" y="340"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_11_di" bpmnElement="Flow_11"><di:waypoint x="1146" y="340"/><di:waypoint x="1190" y="340"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12_di" bpmnElement="Flow_12"><di:waypoint x="1370" y="340"/><di:waypoint x="1410" y="340"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13_di" bpmnElement="Flow_13"><di:waypoint x="1446" y="340"/><di:waypoint x="1465" y="340"/><di:waypoint x="1465" y="150"/><di:waypoint x="1490" y="150"/></bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14_di" bpmnElement="Flow_14"><di:waypoint x="1650" y="150"/><di:waypoint x="1690" y="150"/></bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
