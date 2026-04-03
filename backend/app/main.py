@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.core.database import engine, Base
+import app.models  # noqa: F401 – alle Modelle registrieren
 
 app = FastAPI(
     title="Legalis API",
