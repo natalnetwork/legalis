@@ -1,9 +1,10 @@
-backend/.venv/
-backend/.env
+.env
 __pycache__/
-*.pyc
+*.py[cod]
+*.egg-info/
+.venv/
+dist/
+build/
 .pytest_cache/
 .mypy_cache/
-.ruff_cache/
-.idea/
-.vscode/
+*.log
