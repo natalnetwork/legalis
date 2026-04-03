@@ -752,3 +752,69 @@ Durch die vorstehenden Architekturentscheidungen sind einige frühere Grundsatzf
 13. Lizenz-Matrix und OSS-Compliance-Regeln in die Projektdokumentation übernehmen  
 14. SBOM-/Lizenz-Scan für Python- und Java-Abhängigkeiten für spätere Releases vorsehen  
 15. Packaging-Prototyp für Docker/Compose und optionalen Java-Workflow-Dienst entwerfen
+
+---
+
+## 19. Projektstatus (Stand: 2026-04-03)
+
+### 19.1 Infrastruktur — erledigt
+- [x] Zwei Proxmox-VMs angelegt:  (192.168.10.50) und  (192.168.10.51), Debian 13 (Trixie)
+- [x] User  mit sudo (NOPASSWD) und passwortlosem SSH auf beiden VMs
+- [x] User  mit sudo und passwortlosem SSH auf beiden VMs
+- [x] DNS-Fix () auf beiden VMs
+- [x] Locale konfiguriert:  (UI),  (Regionalformate), Zeitzone 
+- [x]  zu Cloudflare migriert, Wildcard-Zertifikat  eingerichtet
+
+### 19.2 Entwicklungsumgebung (legalis-dev) — erledigt
+- [x] git installiert, Repository  geklont
+- [x] Docker 29.3.1 + Docker Compose 5.1.1 installiert
+- [x] Python 3.13.5 + venv installiert
+- [x] PostgreSQL 17 Client installiert
+- [x] Docker-Stack läuft: FastAPI (Port 8000) + PostgreSQL 17 pt-BR ICU + Adminer (Port 8080)
+- [x] Infrastruktur-Referenzdokument () erstellt → Punkt 11 aus Kap. 18
+
+### 19.3 Datenmodell — erledigt
+- [x] Domain-Entities definiert und in PostgreSQL angelegt: , , , ,  → Punkte 3 + 6 aus Kap. 14
+
+### 19.4 Nächste Schritte (priorisiert)
+- [ ] API-Endpunkte (CRUD) für alle Entities — ohne das kann Legalis noch nichts speichern oder abrufen
+- [ ] Rollen- und Rechtemodell definieren (Kap. 14, Punkt 7)
+- [ ] Alembic Migrations-Setup
+- [ ] Reverse Proxy (Caddy oder NGINX) einrichten
+- [ ] legalis-workflow: Java/Imixs-Stack aufsetzen
+- [ ] Standard-Workflows je Kernprozess definieren (Kap. 14, Punkt 9)
+- [ ] Finance Ops Basismodell spezifizieren (Kap. 14, Punkt 10)
+- [ ] Template-Manifeste und Platzhalterkonzept festlegen (Kap. 14, Punkt 8)
+
+---
+
+## 19. Projektstatus (Stand: 2026-04-03)
+
+### 19.1 Infrastruktur — erledigt
+- [x] Zwei Proxmox-VMs angelegt: `legalis-dev` (192.168.10.50) und `legalis-workflow` (192.168.10.51), Debian 13 (Trixie)
+- [x] User `s_schwiebert` mit sudo (NOPASSWD) und passwortlosem SSH auf beiden VMs
+- [x] User `claude-code` mit sudo und passwortlosem SSH auf beiden VMs
+- [x] DNS-Fix (`nameserver 8.8.8.8`) auf beiden VMs
+- [x] Locale konfiguriert: `de_DE.UTF-8` (UI), `pt_BR.UTF-8` (Regionalformate), Zeitzone `America/Fortaleza`
+- [x] `homenet.dev.br` zu Cloudflare migriert, Wildcard-Zertifikat `*.homenet.dev.br` eingerichtet
+
+### 19.2 Entwicklungsumgebung (legalis-dev) — erledigt
+- [x] git installiert, Repository `natalnetwork/legalis` geklont
+- [x] Docker 29.3.1 + Docker Compose 5.1.1 installiert
+- [x] Python 3.13.5 + venv installiert
+- [x] PostgreSQL 17 Client installiert
+- [x] Docker-Stack läuft: FastAPI (Port 8000) + PostgreSQL 17 pt-BR ICU + Adminer (Port 8080)
+- [x] Infrastruktur-Referenzdokument (`doc/infrastructure.md`) erstellt → Punkt 11 aus Kap. 18
+
+### 19.3 Datenmodell — erledigt
+- [x] Domain-Entities definiert und in PostgreSQL angelegt: `Client`, `Matter`, `Task`, `Deadline`, `Document` → Punkte 3 + 6 aus Kap. 14
+
+### 19.4 Nächste Schritte (priorisiert)
+- [ ] API-Endpunkte (CRUD) für alle Entities — ohne das kann Legalis noch nichts speichern oder abrufen
+- [ ] Alembic Migrations-Setup
+- [ ] Rollen- und Rechtemodell definieren (Kap. 14, Punkt 7)
+- [ ] Reverse Proxy (Caddy oder NGINX) einrichten
+- [ ] legalis-workflow: Java/Imixs-Stack aufsetzen
+- [ ] Standard-Workflows je Kernprozess definieren (Kap. 14, Punkt 9)
+- [ ] Finance Ops Basismodell spezifizieren (Kap. 14, Punkt 10)
+- [ ] Template-Manifeste und Platzhalterkonzept festlegen (Kap. 14, Punkt 8)
